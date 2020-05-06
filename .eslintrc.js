@@ -28,4 +28,7 @@ module.exports = {
       version: "detect",
     },
   },
+  rules: {
+    "@typescript-eslint/explicit-function-return-type": "off",
+  },
 };
