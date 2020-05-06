@@ -1,11 +1,6 @@
-import { BaseAction } from "common/types";
-
-export const createReducer = <T, U extends BaseAction>(
-  initialState: T
-) => (reducerMap: { [key: string]: (state: T, action: U) => T }) => (
-  state = initialState,
-  action: U
-) => {
+export const createReducer = <T>(initialState: T) => (reducerMap: {
+  [key: string]: (state: T, action?) => T;
+}) => (state = initialState, action?) => {
   const reducer = reducerMap[action.type];
   return reducer ? reducer(state, action) : state;
 };

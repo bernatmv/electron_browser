@@ -1,16 +1,15 @@
 import {
   createStore,
   applyMiddleware,
-  combineReducers,
   compose,
   Store,
   CombinedState,
   AnyAction,
-  Reducer,
 } from "redux";
-import * as reducers from "../ducks";
 import { AppState } from "./initial-state";
 import createLogger from "./middlewares/logger-middleware";
+import { rootReducer, rootEpic } from "./modules/root";
+import { epicMiddleware } from "./middlewares/epic-middleware";
 
 const composeEnhancers =
   (window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] as typeof compose) || compose;
@@ -18,16 +17,13 @@ const composeEnhancers =
 export default function configureStore(
   initialState: AppState
 ): Store<CombinedState<AppState>, AnyAction> {
-  const rootReducer = combineReducers(reducers) as Reducer<
-    CombinedState<AppState>,
-    AnyAction
-  >;
-
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(createLogger(true)))
+    composeEnhancers(applyMiddleware(createLogger(true), epicMiddleware))
   );
+
+  epicMiddleware.run(rootEpic);
 
   return store;
 }
