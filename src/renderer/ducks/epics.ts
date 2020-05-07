@@ -1,3 +1,3 @@
-import demoEpics from "./demo/epics";
+import { systemEpics } from "./system";
 
-export const epics = [...demoEpics];
+export const epics = [...systemEpics];

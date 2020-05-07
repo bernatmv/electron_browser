@@ -1,2 +1,2 @@
-export { default as demo } from "./demo";
-export { default as electron } from "common/ducks/electron";
+export { default as system } from "./system";
+export { default as tabs } from "common/ducks/tabs";

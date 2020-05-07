@@ -928,6 +928,12 @@
   version "12.12.34"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.34.tgz#0a5d6ae5d22612f0cf5f10320e1fc5d2a745dcb8"
 
+"@types/normalize-url@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@types/normalize-url/-/normalize-url-4.2.0.tgz#b72486d1d87e70b2b94bd34d9300fe41c736f788"
+  dependencies:
+    normalize-url "*"
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
@@ -5055,6 +5061,10 @@ normalize-path@^2.1.1:
 normalize-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
+
+normalize-url@*, normalize-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-5.0.0.tgz#f46c9dc20670495e4e18fbd1b4396e41d199f63c"
 
 normalize-url@1.9.1, normalize-url@^1.9.1:
   version "1.9.1"

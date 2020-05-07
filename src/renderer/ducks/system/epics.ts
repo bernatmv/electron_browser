@@ -1,3 +1,4 @@
+/*
 import { mapTo } from "rxjs/operators";
 import { Epic, ofType } from "redux-observable";
 import {
@@ -15,3 +16,6 @@ const appendTextEpic: Epic<
 > = action$ => action$.pipe(ofType(APPEND_TEXT), mapTo({ type: APPEND_ICON }));
 
 export default [appendTextEpic];
+*/
+
+export default [];

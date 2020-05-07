@@ -5,10 +5,18 @@ export interface BaseAction {
 
 // STATE SHAPE
 
-export interface ElectronState {
-  color: string;
+export interface Tab {
+  id: string;
+  url: string;
+  history: string[];
+  forward: string[];
+}
+
+export interface TabsState {
+  tabs: Tab[];
+  active: string;
 }
 
 export interface AppState {
-  electron: ElectronState;
+  tabs: TabsState;
 }
