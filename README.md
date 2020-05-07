@@ -17,6 +17,7 @@
 - Redux
 - Redux-Observable
 - Electron-Redux
+- Styled-Components
 
 ## 2. Setup environment
 
@@ -37,9 +38,14 @@ yarn dist:dir
 
 # runs ESLint over the application
 yarn lint
+
+# runs ESLint over the application AND fixes all code styling using prettier
+yarn lint:fix
 ```
 
 It's recommended that your code editor should be able to integrate with:
 
 - ESLint
-- Prettier
+- Prettier (autoformat on save file)
+
+Linting and fixing is automaticaly run before each commit and push.
