@@ -8,8 +8,14 @@ import {
 export const appendText = (payload: AppendTextPayload): DemoActionTypes => ({
   type: APPEND_TEXT,
   payload,
+  meta: {
+    scope: "local",
+  },
 });
 
 export const appendIcon = (): DemoActionTypes => ({
   type: APPEND_ICON,
+  meta: {
+    scope: "local",
+  },
 });

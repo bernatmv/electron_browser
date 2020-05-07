@@ -1,4 +1,9 @@
 import {
+  forwardToMain,
+  replayActionRenderer,
+  getInitialStateRenderer,
+} from "electron-redux";
+import {
   createStore,
   applyMiddleware,
   compose,
@@ -6,24 +11,28 @@ import {
   CombinedState,
   AnyAction,
 } from "redux";
-import { AppState } from "./initial-state";
-import createLogger from "./middlewares/logger-middleware";
+import { RendererState } from "./initial-state";
+import createLogger from "common/middlewares/logger-middleware";
 import { rootReducer, rootEpic } from "./modules/root";
-import { epicMiddleware } from "./middlewares/epic-middleware";
+import { epicMiddleware } from "common/middlewares/epic-middleware";
 
 const composeEnhancers =
   (window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] as typeof compose) || compose;
 
 export default function configureStore(
-  initialState: AppState
-): Store<CombinedState<AppState>, AnyAction> {
+  initialState: RendererState
+): Store<CombinedState<RendererState>, AnyAction> {
   const store = createStore(
     rootReducer,
-    initialState,
-    composeEnhancers(applyMiddleware(createLogger(true), epicMiddleware))
+    { ...initialState, ...getInitialStateRenderer() },
+    composeEnhancers(
+      applyMiddleware(forwardToMain, createLogger(true), epicMiddleware)
+    )
   );
 
   epicMiddleware.run(rootEpic);
+
+  replayActionRenderer(store);
 
   return store;
 }

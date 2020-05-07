@@ -14,6 +14,4 @@ const appendTextEpic: Epic<
   DemoState
 > = action$ => action$.pipe(ofType(APPEND_TEXT), mapTo({ type: APPEND_ICON }));
 
-const demoEpics = [appendTextEpic];
-
-export default demoEpics;
+export default [appendTextEpic];

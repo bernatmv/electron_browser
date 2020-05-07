@@ -1,4 +1,4 @@
-import { createReducer } from "../../shared/utils";
+import { createReducer } from "common/utils";
 import { DemoState, APPEND_TEXT, APPEND_ICON, AppendTextAction } from "./types";
 
 export const demoInitialState: DemoState = {

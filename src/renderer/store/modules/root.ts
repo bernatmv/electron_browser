@@ -1,12 +1,12 @@
-import { combineEpics, Epic } from "redux-observable";
+import { combineEpics } from "redux-observable";
 import { combineReducers, CombinedState, AnyAction, Reducer } from "redux";
 import * as reducers from "../../ducks";
-import { AppState } from "../initial-state";
+import { RendererState } from "../initial-state";
 import { epics } from "../../ducks/epics";
 import { catchError } from "rxjs/operators";
 
 export const rootReducer = combineReducers(reducers) as Reducer<
-  CombinedState<AppState>,
+  CombinedState<RendererState>,
   AnyAction
 >;
 

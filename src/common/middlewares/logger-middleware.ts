@@ -7,8 +7,9 @@ import {
   logGroupCollapsed,
   logInfo,
   logGroupEnd,
-} from "../../shared/console";
-import config from "../../config/config";
+} from "common/console";
+
+const ignoreActions: string[] = [];
 
 function determineStyle(action) {
   if (!action.meta || !action.meta.async) {
@@ -32,7 +33,7 @@ const createLogger = (active = true) => store => next => action => {
     !isEmpty(
       filter(
         ignoredAction => includes(ignoredAction, action.type),
-        config.log.ignoreActions
+        ignoreActions
       )
     )
   ) {

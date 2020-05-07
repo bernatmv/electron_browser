@@ -11,6 +11,7 @@
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix"
   },
   "dependencies": {
+    "electron-redux": "^1.5.2",
     "ramda": "^0.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
