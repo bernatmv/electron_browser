@@ -49,7 +49,7 @@ export interface TabNavigateFulfilledAction extends BaseAction {
   payload: NavigationFulfilledPayload;
 }
 
-export interface TabGoToOffsetAction {
+export interface TabGoToOffsetAction extends BaseAction {
   type: typeof TAB_GO_TO_OFFSET;
   payload: GoToOffsetPayload;
 }

@@ -50,6 +50,9 @@ export const tabGoToOffset = (
 ): TabGoToOffsetAction => ({
   type: TAB_GO_TO_OFFSET,
   payload,
+  meta: {
+    async: true,
+  },
 });
 
 export const tabSetActive = (payload: IdPayload): TabSetActiveAction => ({

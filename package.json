@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron-webpack dev",
+    "start:verbose": "ELECTRON_ENABLE_LOGGING=true electron-webpack dev",
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",

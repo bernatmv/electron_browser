@@ -1,5 +1,6 @@
 import { BrowserView, BrowserWindow } from "electron";
 import normalizeUrl from "normalize-url";
+import * as R from "ramda";
 import { Epic, ofType } from "redux-observable";
 import {
   TabActionTypes,
@@ -98,13 +99,19 @@ class BrowserTab {
         ofType(TAB_GO_TO_OFFSET),
         filter(action => action.payload.id === this.id),
         tap(action => {
-          this.view.webContents.goToOffset(
-            (action as TabGoToOffsetAction).payload.offset
-          );
+          const offset = (action as TabGoToOffsetAction).payload.offset;
+
+          this.view.webContents.goToOffset(offset);
+
           this.store.dispatch(
             tabsOperations.tabNavigateFulFilled({
               id: action.payload.id,
-              url: this.view.webContents.getURL(),
+              url: R.pathOr(
+                "",
+                // weirdly enough these method/property are not typed on the library :shrug:
+                [(this.view.webContents as any).getActiveIndex()],
+                (this.view.webContents as any).history
+              ),
               canGoBack: this.view.webContents.canGoBack(),
               canGoForward: this.view.webContents.canGoForward(),
             })

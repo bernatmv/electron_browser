@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as R from "ramda";
 import { Tabs, Input, Button } from "antd";
 import {
@@ -9,8 +9,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import { Props } from "./navigation.container";
-import { extractHostname } from "common/utils";
 import { config } from "common/config/config";
+import { extractHostname } from "common/utils";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -24,6 +24,14 @@ const Navigation = ({
   tabNavigate,
   tabGoToOffset,
 }: Props) => {
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const tab = R.find(R.propEq("id", active), tabs);
+
+    setSearch(tab.url);
+  }, [tabs]);
+
   const edit = (id, action) =>
     action === "add" ? tabAdd({ id: uuidv4() }) : tabRemove({ id });
 
@@ -64,13 +72,15 @@ const Navigation = ({
         {R.map(
           tab => (
             <StyledTabPane
-              tab={extractHostname(tab.url)}
               key={tab.id}
+              tab={extractHostname(tab.url)}
               closable={true}
             >
               <StyledSearch
                 placeholder={tab.url}
-                onSearch={url => tabNavigate({ id: tab.id, url })}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onSearch={newUrl => tabNavigate({ id: tab.id, url: newUrl })}
               />
             </StyledTabPane>
           ),
@@ -84,8 +94,8 @@ const Navigation = ({
 // Styles
 
 const StyledTabs: any = styled(Tabs)``;
-const StyledTabPane: any = styled(TabPane)``;
 const StyledSearch = styled(Search)``;
+const StyledTabPane: any = styled(TabPane)``;
 
 const Container = styled.div`
   position: absolute;
@@ -113,7 +123,5 @@ const Container = styled.div`
 const NavButton = styled(Button)`
   margin-right: 5px;
 `;
-
-// Export
 
 export default Navigation;
