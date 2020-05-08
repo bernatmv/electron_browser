@@ -8,6 +8,10 @@ export const createReducer = <T>(initialState: T) => (reducerMap: {
 };
 
 export const extractHostname = (url: string): string => {
+  if (!url) {
+    return "";
+  }
+
   let hostname;
 
   //find & remove protocol (http, ftp, etc.) and get hostname

@@ -6,9 +6,10 @@ import {
   TAB_REMOVE,
   TabNavigateAction,
   TAB_NAVIGATE,
-  TAB_NAVIGATE_FULFILLED,
+  TabGoToOffsetAction,
+  TAB_GO_TO_OFFSET,
 } from "common/ducks/tabs/types";
-import { filter, ignoreElements, takeUntil, tap, mapTo } from "rxjs/operators";
+import { filter, ignoreElements, takeUntil, tap } from "rxjs/operators";
 import { AppState } from "common/types";
 import { epic$ } from "../store/modules/root";
 import { Store, AnyAction } from "redux";
@@ -70,7 +71,12 @@ class BrowserTab {
         tap(action =>
           this.navigate((action as TabNavigateAction).payload.url).then(() => {
             this.store.dispatch(
-              tabsOperations.tabNavigateFulFilled({ id: action.payload.id })
+              tabsOperations.tabNavigateFulFilled({
+                id: action.payload.id,
+                url: this.view.webContents.getURL(),
+                canGoBack: this.view.webContents.canGoBack(),
+                canGoForward: this.view.webContents.canGoForward(),
+              })
             );
           })
         ),
@@ -83,7 +89,38 @@ class BrowserTab {
         )
       );
 
+    const tabGoOffsetEpic: Epic<
+      TabActionTypes,
+      TabGoToOffsetAction,
+      AppState
+    > = action$ =>
+      action$.pipe(
+        ofType(TAB_GO_TO_OFFSET),
+        filter(action => action.payload.id === this.id),
+        tap(action => {
+          this.view.webContents.goToOffset(
+            (action as TabGoToOffsetAction).payload.offset
+          );
+          this.store.dispatch(
+            tabsOperations.tabNavigateFulFilled({
+              id: action.payload.id,
+              url: this.view.webContents.getURL(),
+              canGoBack: this.view.webContents.canGoBack(),
+              canGoForward: this.view.webContents.canGoForward(),
+            })
+          );
+        }),
+        ignoreElements(),
+        takeUntil(
+          action$.pipe(
+            ofType(TAB_REMOVE),
+            filter(action => action.payload.id === this.id)
+          )
+        )
+      );
+
     epic$.next(tabNavigatEpic);
+    epic$.next(tabGoOffsetEpic);
   }
 }
 

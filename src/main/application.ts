@@ -15,6 +15,8 @@ import {
   TAB_ADD,
   TabSetActiveAction,
   TAB_SET_ACTIVE,
+  TabRemoveAction,
+  TAB_REMOVE,
 } from "common/ducks/tabs/types";
 import { AppState } from "common/types";
 import { epic$ } from "./store/modules/root";
@@ -151,8 +153,10 @@ class Application {
     }
 
     window.on("show", () => {
-      // we will add a default tab
-      this.store.dispatch(tabsOperations.tabAdd({ id: uuidv4() }));
+      // we will add a default tab if none exist
+      if (R.isEmpty(this.tabs)) {
+        this.store.dispatch(tabsOperations.tabAdd({ id: uuidv4() }));
+      }
     });
 
     window.on("closed", () => {
@@ -225,8 +229,28 @@ class Application {
         ignoreElements()
       );
 
+    const tabRemoveEpic: Epic<
+      TabActionTypes,
+      TabRemoveAction,
+      AppState
+    > = action$ =>
+      action$.pipe(
+        ofType(TAB_REMOVE),
+        tap(action => {
+          const removedTab = R.find(
+            tab => tab.id === action.payload.id,
+            this.tabs
+          );
+
+          this.mainWindow.removeBrowserView(removedTab?.view);
+          this.tabs = R.filter(tab => tab.id !== action.payload.id, this.tabs);
+        }),
+        ignoreElements()
+      );
+
     epic$.next(tabAddEpic);
     epic$.next(tabSetActiveEpic);
+    epic$.next(tabRemoveEpic);
   }
 }
 

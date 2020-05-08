@@ -4,8 +4,7 @@ export const TAB_ADD = "tabs/TAB_ADD";
 export const TAB_REMOVE = "tabs/TAB_REMOVE";
 export const TAB_NAVIGATE = "tabs/TAB_NAVIGATE";
 export const TAB_NAVIGATE_FULFILLED = "tabs/TAB_NAVIGATE_FULFILLED";
-export const TAB_GO_BACK = "tabs/TAB_GO_BACK";
-export const TAB_GO_FORWARD = "tabs/TAB_GO_FORWARD";
+export const TAB_GO_TO_OFFSET = "tabs/TAB_GO_TO_OFFSET";
 export const TAB_SET_ACTIVE = "tabs/TAB_SET_ACTIVE";
 
 // Payloads
@@ -16,6 +15,16 @@ export interface IdPayload {
 
 export interface NavigatePayload extends IdPayload {
   url: string;
+}
+
+export interface NavigationFulfilledPayload extends IdPayload {
+  url: string;
+  canGoBack: boolean;
+  canGoForward: boolean;
+}
+
+export interface GoToOffsetPayload extends IdPayload {
+  offset: number;
 }
 
 // Actions
@@ -37,17 +46,12 @@ export interface TabNavigateAction extends BaseAction {
 
 export interface TabNavigateFulfilledAction extends BaseAction {
   type: typeof TAB_NAVIGATE_FULFILLED;
-  payload: IdPayload;
+  payload: NavigationFulfilledPayload;
 }
 
-export interface TabGoBackAction {
-  type: typeof TAB_GO_BACK;
-  payload: IdPayload;
-}
-
-export interface TabGoForwardAction {
-  type: typeof TAB_GO_FORWARD;
-  payload: IdPayload;
+export interface TabGoToOffsetAction {
+  type: typeof TAB_GO_TO_OFFSET;
+  payload: GoToOffsetPayload;
 }
 
 export interface TabSetActiveAction {
@@ -60,6 +64,5 @@ export type TabActionTypes =
   | TabRemoveAction
   | TabNavigateAction
   | TabNavigateFulfilledAction
-  | TabGoBackAction
-  | TabGoForwardAction
+  | TabGoToOffsetAction
   | TabSetActiveAction;

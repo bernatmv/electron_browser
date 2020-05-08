@@ -7,14 +7,12 @@ import {
   TabRemoveAction,
   TAB_NAVIGATE,
   TabNavigateAction,
-  TAB_GO_BACK,
-  TabGoBackAction,
-  TabGoForwardAction,
-  TAB_GO_FORWARD,
   TAB_SET_ACTIVE,
   TabSetActiveAction,
   TAB_NAVIGATE_FULFILLED,
   TabNavigateFulfilledAction,
+  TAB_GO_TO_OFFSET,
+  TabGoToOffsetAction,
 } from "./types";
 import { TabsState, Tab } from "common/types";
 import { config } from "common/config/config";
@@ -64,6 +62,8 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
               ...tab,
               url: action.payload.url,
               loading: true,
+              canGoBack: false,
+              canGoForward: false,
             }
           : tab,
       state.tabs
@@ -80,12 +80,15 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
           ? {
               ...tab,
               loading: false,
+              url: action.payload.url,
+              canGoBack: action.payload.canGoBack,
+              canGoForward: action.payload.canGoForward,
             }
           : tab,
       state.tabs
     ),
   }),
-  [TAB_GO_BACK]: (state, action: TabGoBackAction): TabsState => ({
+  [TAB_GO_TO_OFFSET]: (state, action: TabGoToOffsetAction): TabsState => ({
     ...state,
     tabs: R.map(
       tab =>
@@ -93,19 +96,8 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
           ? {
               ...tab,
               loading: true,
-            }
-          : tab,
-      state.tabs
-    ),
-  }),
-  [TAB_GO_FORWARD]: (state, action: TabGoForwardAction): TabsState => ({
-    ...state,
-    tabs: R.map(
-      tab =>
-        tab.id === action.payload.id
-          ? {
-              ...tab,
-              loading: true,
+              canGoBack: false,
+              canGoForward: false,
             }
           : tab,
       state.tabs

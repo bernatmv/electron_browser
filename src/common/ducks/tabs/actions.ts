@@ -7,14 +7,14 @@ import {
   NavigatePayload,
   TabNavigateAction,
   TAB_NAVIGATE,
-  TabGoBackAction,
-  TAB_GO_BACK,
-  TabGoForwardAction,
-  TAB_GO_FORWARD,
   TabSetActiveAction,
   TAB_SET_ACTIVE,
   TabNavigateFulfilledAction,
   TAB_NAVIGATE_FULFILLED,
+  NavigationFulfilledPayload,
+  TabGoToOffsetAction,
+  TAB_GO_TO_OFFSET,
+  GoToOffsetPayload,
 } from "./types";
 
 export const tabAdd = (payload: IdPayload): TabAddAction => ({
@@ -36,7 +36,7 @@ export const tabNavigate = (payload: NavigatePayload): TabNavigateAction => ({
 });
 
 export const tabNavigateFulFilled = (
-  payload: IdPayload
+  payload: NavigationFulfilledPayload
 ): TabNavigateFulfilledAction => ({
   type: TAB_NAVIGATE_FULFILLED,
   payload,
@@ -45,13 +45,10 @@ export const tabNavigateFulFilled = (
   },
 });
 
-export const tabGoBack = (payload: IdPayload): TabGoBackAction => ({
-  type: TAB_GO_BACK,
-  payload,
-});
-
-export const tabGoForward = (payload: IdPayload): TabGoForwardAction => ({
-  type: TAB_GO_FORWARD,
+export const tabGoToOffset = (
+  payload: GoToOffsetPayload
+): TabGoToOffsetAction => ({
+  type: TAB_GO_TO_OFFSET,
   payload,
 });
 

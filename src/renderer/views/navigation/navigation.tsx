@@ -1,6 +1,11 @@
 import React from "react";
 import * as R from "ramda";
-import { Tabs, Input } from "antd";
+import { Tabs, Input, Button } from "antd";
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import { Props } from "./navigation.container";
@@ -17,13 +22,40 @@ const Navigation = ({
   tabRemove,
   tabSetActive,
   tabNavigate,
+  tabGoToOffset,
 }: Props) => {
   const edit = (id, action) =>
     action === "add" ? tabAdd({ id: uuidv4() }) : tabRemove({ id });
 
+  const selectedTab = R.find(R.propEq("id", active), tabs);
+
+  const operations = (
+    <div>
+      <NavButton
+        shape="circle"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => tabGoToOffset({ id: active, offset: -1 })}
+        disabled={!selectedTab?.canGoBack}
+      />
+      <NavButton
+        shape="circle"
+        icon={<ArrowRightOutlined />}
+        onClick={() => tabGoToOffset({ id: active, offset: 1 })}
+        disabled={!selectedTab?.canGoForward}
+      />
+      <NavButton
+        shape="circle"
+        icon={<PlusOutlined />}
+        onClick={() => edit(null, "add")}
+      />
+    </div>
+  );
+
   return (
     <Container>
       <StyledTabs
+        tabBarExtraContent={operations}
+        hideAdd
         onChange={id => tabSetActive({ id })}
         activeKey={active}
         type="editable-card"
@@ -76,6 +108,10 @@ const Container = styled.div`
   & ${StyledSearch} {
     width: 100%;
   }
+`;
+
+const NavButton = styled(Button)`
+  margin-right: 5px;
 `;
 
 // Export
