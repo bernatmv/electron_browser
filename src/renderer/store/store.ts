@@ -26,7 +26,7 @@ export default function configureStore(
     rootReducer,
     { ...initialState, ...getInitialStateRenderer() },
     composeEnhancers(
-      applyMiddleware(forwardToMain, createLogger(true), epicMiddleware)
+      applyMiddleware(forwardToMain, createLogger(true, false), epicMiddleware)
     )
   );
 

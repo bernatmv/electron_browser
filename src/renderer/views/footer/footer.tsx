@@ -8,14 +8,14 @@ const Footer = ({ activeUrl }: Props) => <Container>{activeUrl}</Container>;
 
 const Container = styled.div`
   display: flex;
-  flex: 0 0 35px;
+  flex: 0 0 20px;
   width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   padding: 0 0 0 10px;
 
-  background: #ccc;
+  background: #eee;
 
   font-size: 11px;
   color: #888;

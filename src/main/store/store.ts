@@ -17,7 +17,7 @@ export default function configureStore(
   const store = createStore(
     rootReducer,
     initialState,
-    compose(applyMiddleware(createLogger(true), forwardToRenderer))
+    compose(applyMiddleware(createLogger(), forwardToRenderer))
   );
 
   replayActionMain(store);

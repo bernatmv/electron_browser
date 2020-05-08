@@ -16,12 +16,7 @@ import {
 } from "./types";
 import { TabsState, Tab } from "common/types";
 
-const defaultUrl = "https://thebrowser.company/";
-
-export const tabsInitialState: TabsState = {
-  tabs: [],
-  active: null,
-};
+const defaultUrl = "https://www.thebrowser.company/";
 
 const newTab = (id: string): Tab => ({
   id,
@@ -30,12 +25,18 @@ const newTab = (id: string): Tab => ({
   forward: [],
 });
 
+export const tabsInitialState: TabsState = {
+  tabs: [newTab("default")],
+  active: "default",
+};
+
 // Reducer
 
 const tabsReducer = createReducer<TabsState>(tabsInitialState)({
   [TAB_ADD]: (state, action: TabAddAction): TabsState => ({
     ...state,
     tabs: [...state.tabs, newTab(action.payload.id)],
+    active: action.payload.id,
   }),
   [TAB_REMOVE]: (state, action: TabRemoveAction): TabsState => {
     const remainingTabs = R.filter(

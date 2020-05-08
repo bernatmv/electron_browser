@@ -27,7 +27,10 @@ function determineStyle(action) {
   return STARTED;
 }
 
-const createLogger = (active = true) => store => next => action => {
+const createLogger = (
+  active = true,
+  isMainProcess = true
+) => store => next => action => {
   if (
     !active ||
     !isEmpty(
@@ -44,11 +47,15 @@ const createLogger = (active = true) => store => next => action => {
   const result = next(action);
   const nextState = store.getState();
 
-  logGroupCollapsed(`%c ${action.type} `, determineStyle(action));
-  logInfo("%cprev state", "color: darkorange", prevState);
-  logInfo("%caction payload", "color: blue", action.payload);
-  logInfo("%cnext state", "color: darkgreen", nextState);
-  logGroupEnd();
+  if (isMainProcess) {
+    logInfo(`action: `, action.type, `\naction payload: `, action.payload);
+  } else {
+    logGroupCollapsed(`%c ${action.type} `, determineStyle(action));
+    logInfo("%cprev state", "color: darkorange", prevState);
+    logInfo("%caction payload", "color: blue", action.payload);
+    logInfo("%cnext state", "color: darkgreen", nextState);
+    logGroupEnd();
+  }
 
   return result;
 };

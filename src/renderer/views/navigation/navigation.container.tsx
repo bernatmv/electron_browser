@@ -5,7 +5,7 @@ import Navigation from "./navigation";
 import { tabsOperations } from "common/ducks/tabs";
 
 const mapState = (state: RendererState) => ({
-  tabs: state.tabs,
+  ...state.tabs,
 });
 
 const mapDispatch = {

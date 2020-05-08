@@ -5,6 +5,8 @@ import App from "./app";
 import configureStore from "./store/store";
 import initialState from "./store/initial-state";
 
+import "antd/dist/antd.css";
+
 const store = configureStore(window["REDUX_INITIAL_DATA"] || initialState);
 
 ReactDOM.render(
