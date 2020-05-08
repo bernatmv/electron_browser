@@ -13,21 +13,23 @@ import {
   TAB_GO_FORWARD,
   TAB_SET_ACTIVE,
   TabSetActiveAction,
+  TAB_NAVIGATE_FULFILLED,
+  TabNavigateFulfilledAction,
 } from "./types";
 import { TabsState, Tab } from "common/types";
-
-const defaultUrl = "https://www.thebrowser.company/";
+import { config } from "common/config/config";
 
 const newTab = (id: string): Tab => ({
   id,
-  url: defaultUrl,
-  history: [],
-  forward: [],
+  url: config.navigation.defaultUrl,
+  loading: false,
+  canGoBack: false,
+  canGoForward: false,
 });
 
 export const tabsInitialState: TabsState = {
-  tabs: [newTab("default")],
-  active: "default",
+  tabs: [],
+  active: "",
 };
 
 // Reducer
@@ -61,8 +63,23 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
           ? {
               ...tab,
               url: action.payload.url,
-              history: [...tab.history, tab.url],
-              forward: [],
+              loading: true,
+            }
+          : tab,
+      state.tabs
+    ),
+  }),
+  [TAB_NAVIGATE_FULFILLED]: (
+    state,
+    action: TabNavigateFulfilledAction
+  ): TabsState => ({
+    ...state,
+    tabs: R.map(
+      tab =>
+        tab.id === action.payload.id
+          ? {
+              ...tab,
+              loading: false,
             }
           : tab,
       state.tabs
@@ -75,9 +92,7 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
         tab.id === action.payload.id
           ? {
               ...tab,
-              url: R.last(tab.history) ? R.last(tab.history) : tab.url,
-              history: R.slice(0, -1, tab.history),
-              forward: [tab.url, ...tab.forward],
+              loading: true,
             }
           : tab,
       state.tabs
@@ -90,9 +105,7 @@ const tabsReducer = createReducer<TabsState>(tabsInitialState)({
         tab.id === action.payload.id
           ? {
               ...tab,
-              url: R.head(tab.forward) ? R.head(tab.forward) : tab.url,
-              history: [...tab.history, tab.url],
-              forward: R.slice(1, Infinity, tab.forward),
+              loading: true,
             }
           : tab,
       state.tabs

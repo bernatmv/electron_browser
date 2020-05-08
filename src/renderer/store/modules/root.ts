@@ -1,17 +1,21 @@
-import { combineEpics } from "redux-observable";
+import { combineEpics, Epic } from "redux-observable";
 import { combineReducers, CombinedState, AnyAction, Reducer } from "redux";
 import * as reducers from "../../ducks";
-import { RendererState } from "../initial-state";
-import { epics } from "../../ducks/epics";
-import { catchError } from "rxjs/operators";
+import { catchError, mergeMap } from "rxjs/operators";
+import { BehaviorSubject } from "rxjs";
+import { epics } from "common/ducks/epics";
+import { AppState } from "common/types";
 
 export const rootReducer = combineReducers(reducers) as Reducer<
-  CombinedState<RendererState>,
+  CombinedState<AppState>,
   AnyAction
 >;
 
-export const rootEpic = (action$, store$, dependencies) =>
-  combineEpics(...epics)(action$, store$, dependencies).pipe(
+export const epic$ = new BehaviorSubject(combineEpics(...epics));
+
+export const rootEpic: Epic<any, any, any, any> = (action$, state$) =>
+  epic$.pipe(
+    mergeMap(epic => epic(action$, state$)),
     catchError((error, source) => {
       console.error(error);
       return source;

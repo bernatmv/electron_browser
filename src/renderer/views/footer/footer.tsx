@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Props } from "./footer.container";
+import { config } from "common/config/config";
 
 const Footer = ({ activeUrl }: Props) => <Container>{activeUrl}</Container>;
 
@@ -8,7 +9,7 @@ const Footer = ({ activeUrl }: Props) => <Container>{activeUrl}</Container>;
 
 const Container = styled.div`
   display: flex;
-  flex: 0 0 20px;
+  flex: 0 0 ${config.layout.footerHeight}px;
   width: 100%;
   flex-direction: row;
   align-items: center;

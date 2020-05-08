@@ -1,10 +1,10 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { RendererState } from "src/renderer/store/initial-state";
 import Navigation from "./navigation";
 import { tabsOperations } from "common/ducks/tabs";
+import { AppState } from "common/types";
 
-const mapState = (state: RendererState) => ({
+const mapState = (state: AppState) => ({
   ...state.tabs,
 });
 

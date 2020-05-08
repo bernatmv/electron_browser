@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const BrowserView = () => <Container>BrowserView goes HERE</Container>;
+const BrowserView = () => <Container />;
 
 // Styles
 

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import { Props } from "./navigation.container";
 import { extractHostname } from "common/utils";
+import { config } from "common/config/config";
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -57,7 +58,7 @@ const StyledSearch = styled(Search)``;
 const Container = styled.div`
   position: absolute;
   display: flex;
-  flex: 0 0 100px;
+  flex: 0 0 ${config.layout.navigationHeight}px;
   width: 100%;
   flex-direction: row;
   align-items: center;

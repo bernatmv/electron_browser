@@ -8,8 +8,9 @@ import {
   AnyAction,
 } from "redux";
 import createLogger from "common/middlewares/logger-middleware";
-import { rootReducer } from "./modules/root";
+import { rootReducer, rootEpic } from "./modules/root";
 import { AppState } from "common/types";
+import { epicMiddleware } from "common/middlewares/epic-middleware";
 
 export default function configureStore(
   initialState: AppState
@@ -17,8 +18,10 @@ export default function configureStore(
   const store = createStore(
     rootReducer,
     initialState,
-    compose(applyMiddleware(createLogger(), forwardToRenderer))
+    compose(applyMiddleware(createLogger(), epicMiddleware, forwardToRenderer))
   );
+
+  epicMiddleware.run(rootEpic);
 
   replayActionMain(store);
 

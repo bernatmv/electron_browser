@@ -2,9 +2,9 @@ import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { getActiveUrl } from "common/ducks/tabs/selectors";
 import Footer from "./footer";
-import { RendererState } from "src/renderer/store/initial-state";
+import { AppState } from "common/types";
 
-const mapState = (state: RendererState) => ({
+const mapState = (state: AppState) => ({
   activeUrl: getActiveUrl(state),
 });
 

@@ -1,13 +1,7 @@
 import { AppState } from "common/types";
 import { tabsInitialState } from "common/ducks/tabs";
-import { systemTypes, systemInitialState } from "../ducks/system";
 
-export interface RendererState extends AppState {
-  system: systemTypes.SystemState;
-}
-
-const initialState: RendererState = {
-  system: systemInitialState,
+const initialState: AppState = {
   tabs: tabsInitialState,
 };
 

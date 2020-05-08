@@ -13,6 +13,8 @@ import {
   TAB_GO_FORWARD,
   TabSetActiveAction,
   TAB_SET_ACTIVE,
+  TabNavigateFulfilledAction,
+  TAB_NAVIGATE_FULFILLED,
 } from "./types";
 
 export const tabAdd = (payload: IdPayload): TabAddAction => ({
@@ -28,6 +30,19 @@ export const tabRemove = (payload: IdPayload): TabRemoveAction => ({
 export const tabNavigate = (payload: NavigatePayload): TabNavigateAction => ({
   type: TAB_NAVIGATE,
   payload,
+  meta: {
+    async: true,
+  },
+});
+
+export const tabNavigateFulFilled = (
+  payload: IdPayload
+): TabNavigateFulfilledAction => ({
+  type: TAB_NAVIGATE_FULFILLED,
+  payload,
+  meta: {
+    async: true,
+  },
 });
 
 export const tabGoBack = (payload: IdPayload): TabGoBackAction => ({

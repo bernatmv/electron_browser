@@ -1,6 +1,9 @@
+import { BaseAction } from "common/types";
+
 export const TAB_ADD = "tabs/TAB_ADD";
 export const TAB_REMOVE = "tabs/TAB_REMOVE";
 export const TAB_NAVIGATE = "tabs/TAB_NAVIGATE";
+export const TAB_NAVIGATE_FULFILLED = "tabs/TAB_NAVIGATE_FULFILLED";
 export const TAB_GO_BACK = "tabs/TAB_GO_BACK";
 export const TAB_GO_FORWARD = "tabs/TAB_GO_FORWARD";
 export const TAB_SET_ACTIVE = "tabs/TAB_SET_ACTIVE";
@@ -27,9 +30,14 @@ export interface TabRemoveAction {
   payload: IdPayload;
 }
 
-export interface TabNavigateAction {
+export interface TabNavigateAction extends BaseAction {
   type: typeof TAB_NAVIGATE;
   payload: NavigatePayload;
+}
+
+export interface TabNavigateFulfilledAction extends BaseAction {
+  type: typeof TAB_NAVIGATE_FULFILLED;
+  payload: IdPayload;
 }
 
 export interface TabGoBackAction {
@@ -51,6 +59,7 @@ export type TabActionTypes =
   | TabAddAction
   | TabRemoveAction
   | TabNavigateAction
+  | TabNavigateFulfilledAction
   | TabGoBackAction
   | TabGoForwardAction
   | TabSetActiveAction;
