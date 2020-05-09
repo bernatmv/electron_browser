@@ -1,23 +1,41 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
+import * as R from "ramda";
 import { format as formatUrl } from "url";
+import { v4 as uuidv4 } from "uuid";
 import configureStore from "./store/store";
 import initialState from "./store/initial-state";
 import { Store } from "redux";
+import { tabsOperations } from "common/ducks/tabs";
+import BrowserTab from "./components/browser-tab";
+import { Epic, ofType } from "redux-observable";
+import {
+  TabActionTypes,
+  TabAddAction,
+  TAB_ADD,
+  TabSetActiveAction,
+  TAB_SET_ACTIVE,
+  TabRemoveAction,
+  TAB_REMOVE,
+} from "common/ducks/tabs/types";
+import { AppState } from "common/types";
+import { epic$ } from "./store/modules/root";
+import { tap, ignoreElements } from "rxjs/operators";
+import { config } from "common/config/config";
 
 class Application {
-  private mainWindow: BrowserWindow | null;
-  private store: Store | null;
+  private mainWindow: BrowserWindow = null;
+  private tabs: BrowserTab[] = [];
+  private store: Store = null;
 
-  constructor(private isDevelopment: boolean) {
-    this.mainWindow = null;
-    this.store = null;
-  }
+  constructor(private isDevelopment: boolean) {}
 
   public async setup(): Promise<void> {
     try {
       // store
       this.store = configureStore(initialState);
+      // epics
+      this.registerEpics();
       // other listeners
       this.listenForTemination();
       this.listenForUnhandledError();
@@ -65,6 +83,8 @@ class Application {
     }, 500);
   }
 
+  // Listeners
+
   private listenForTemination(): void {
     console.log(
       `main-process.app.listenForTemination: listening to process events to gracefully shutdown`
@@ -109,11 +129,13 @@ class Application {
 
   private createMainWindow(): BrowserWindow {
     const window = new BrowserWindow({
+      width: config.layout.windowDefaultWidth,
+      height: config.layout.windowDefaultHeight,
       webPreferences: { nodeIntegration: true },
     });
 
     if (this.isDevelopment) {
-      window.webContents.openDevTools();
+      window.webContents.openDevTools({ mode: "detach" });
     }
 
     if (this.isDevelopment) {
@@ -130,6 +152,13 @@ class Application {
       );
     }
 
+    window.on("show", () => {
+      // we will add a default tab if none exist
+      if (R.isEmpty(this.tabs)) {
+        this.store.dispatch(tabsOperations.tabAdd({ id: uuidv4() }));
+      }
+    });
+
     window.on("closed", () => {
       this.mainWindow = null;
     });
@@ -142,6 +171,86 @@ class Application {
     });
 
     return window;
+  }
+
+  private calculateViewBounds(): Electron.Rectangle {
+    const windowBounds = this.mainWindow.getBounds();
+
+    return {
+      x: 0,
+      y: config.layout.navigationHeight,
+      width: windowBounds.width,
+      height:
+        windowBounds.height -
+        config.layout.navigationHeight -
+        config.layout.footerHeight -
+        config.layout.windowHeaderHeight,
+    };
+  }
+
+  // Epics
+
+  private registerEpics() {
+    const tabAddEpic: Epic<TabActionTypes, TabAddAction, AppState> = action$ =>
+      action$.pipe(
+        ofType(TAB_ADD),
+        tap(action => {
+          const tab = new BrowserTab(
+            action.payload.id,
+            this.store,
+            this.mainWindow,
+            this.calculateViewBounds(),
+            config.navigation.defaultUrl
+          );
+
+          this.tabs.push(tab);
+        }),
+        ignoreElements()
+      );
+
+    const tabSetActiveEpic: Epic<
+      TabActionTypes,
+      TabSetActiveAction,
+      AppState
+    > = action$ =>
+      action$.pipe(
+        ofType(TAB_SET_ACTIVE),
+        tap(action => {
+          const id = action.payload.id;
+
+          R.forEach(
+            tab =>
+              tab.id === id
+                ? this.mainWindow.addBrowserView(tab.view)
+                : this.mainWindow.removeBrowserView(tab.view),
+            this.tabs
+          );
+        }),
+        ignoreElements()
+      );
+
+    const tabRemoveEpic: Epic<
+      TabActionTypes,
+      TabRemoveAction,
+      AppState
+    > = action$ =>
+      action$.pipe(
+        ofType(TAB_REMOVE),
+        tap(action => {
+          const removedTab = R.find(
+            tab => tab.id === action.payload.id,
+            this.tabs
+          );
+
+          this.mainWindow.removeBrowserView(removedTab?.view);
+          this.tabs = R.filter(tab => tab.id !== action.payload.id, this.tabs);
+        }),
+        ignoreElements()
+      );
+
+    epic$.next(tabAddEpic);
+    epic$.next(tabSetActiveEpic);
+    epic$.next(tabRemoveEpic);
   }
 }
 

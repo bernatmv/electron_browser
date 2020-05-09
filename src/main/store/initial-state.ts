@@ -1,8 +1,8 @@
 import { AppState } from "common/types";
-import { electronInitialState } from "common/ducks/electron";
+import { tabsInitialState } from "common/ducks/tabs";
 
 const initialState: AppState = {
-  electron: electronInitialState,
+  tabs: tabsInitialState,
 };
 
 export default initialState;

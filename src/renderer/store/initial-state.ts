@@ -1,14 +1,8 @@
-import { demoInitialState, demoTypes } from "../ducks/demo";
 import { AppState } from "common/types";
-import { electronInitialState } from "common/ducks/electron";
+import { tabsInitialState } from "common/ducks/tabs";
 
-export interface RendererState extends AppState {
-  demo: demoTypes.DemoState;
-}
-
-const initialState: RendererState = {
-  demo: demoInitialState,
-  electron: electronInitialState,
+const initialState: AppState = {
+  tabs: tabsInitialState,
 };
 
 export default initialState;

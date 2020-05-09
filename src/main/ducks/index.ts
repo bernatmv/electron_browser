@@ -1,1 +1,1 @@
-export { default as electron } from "common/ducks/electron";
+export { default as tabs } from "common/ducks/tabs";
