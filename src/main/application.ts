@@ -60,6 +60,8 @@ class Application {
         // on macOS it is common to re-create a window even after all windows have been closed
         if (this.mainWindow === null) {
           this.mainWindow = this.createMainWindow();
+        } else {
+          this.mainWindow.show();
         }
       });
 
@@ -157,6 +159,11 @@ class Application {
       if (R.isEmpty(this.tabs)) {
         this.store.dispatch(tabsOperations.tabAdd({ id: uuidv4() }));
       }
+    });
+
+    window.on("close", e => {
+      e.preventDefault();
+      this.mainWindow.hide();
     });
 
     window.on("closed", () => {
